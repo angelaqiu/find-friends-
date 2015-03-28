@@ -2,14 +2,22 @@
     width: 15%;
     background-color: #A9EAF5;
     position: fixed;
-    right:0px;
+    right: 0px;
     bottom: 0px;
     margin: auto;
     text-align: left;
-    padding: 50px 60px;
+    padding: 30px 60px;
     border: solid #fff;
-    border-width: 15px 15px 0px 15px;
+    border-width: 15px 0px 0px 15px;
     z-index:3;
     color:#227CB3;
     font-family: 'Roboto';
+}
+h1 {
+    line-height: 80%;
+}
+
+h2 {
+    line-height: 80%;
+    font-size: 16px;
 }
