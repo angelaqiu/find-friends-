@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Facebook Login JavaScript Example</title>
+<title>find(friends)!</title>
 <meta charset="UTF-8">
 </head>
 <body>
@@ -17,6 +17,7 @@
     if (response.status === 'connected') {
       // Logged into your app and Facebook.
       testAPI();
+      getFriends();
     } else if (response.status === 'not_authorized') {
       // The person is logged into Facebook, but not your app.
       document.getElementById('status').innerHTML = 'Please log ' +
@@ -83,6 +84,20 @@
         'Thanks for logging in, ' + response.name + '!';
     });
   }
+
+  function getFriends() {
+    console.log("here are your friends");
+    FB.api(
+    "/me/friends",
+    function (response) {
+      if (response && !response.error) {
+        console.log('Successful info: ' + response);
+        document.getElementById('info').innerHTML =
+            'Info: ' + response.data[0];
+            // " Number of events: " + response.data.length + " People attending: " + response.data[0].id; 
+      }
+    }
+  );}
 </script>
 
 <!--
@@ -91,10 +106,13 @@
   the FB.login() function when clicked.
 -->
 
-<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+<fb:login-button scope="public_profile, email, user_friends" onlogin="checkLoginState();">
 </fb:login-button>
 
 <div id="status">
+</div>
+
+<div id = "info">
 </div>
 
 </body>
