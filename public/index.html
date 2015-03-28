@@ -116,7 +116,7 @@ function getPicture(fid, i)
     function (response) {
       if (response && !response.error) {
         console.log(response.data.url);
-        pictures[i] = response;
+        pictures[i] = response.data.url;
       }
     }
 );
@@ -127,18 +127,18 @@ function getFriendLoc()
   for (var i = 0; i < friendIDs.length; i++)
   {
       var fid = friendIDs[i];
-      process(fid);
+      process(fid, i);
       console.log("i: "+ i); 
   }
 }
 
-function process(fid) {
+function process(fid, i) {
   FB.api(
     "/" + fid,
     function (response) {
       if (response && !response.error) {
         console.log(response);
-        document.getElementById('info').innerHTML += response.name + ": " +response.location.name + "\n ";
+        document.getElementById('info').innerHTML += response.name + ": " +response.location.name + "<img src=\"" + pictures[i] + "\">" + "\n ";
       }
     });
 }
