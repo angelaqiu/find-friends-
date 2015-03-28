@@ -5,7 +5,11 @@
 <meta charset="UTF-8">
 </head>
 <body>
+
+<div id="main">
 <script>
+var friendIDs = [];
+var pictures = [];
   // This is called with the results from from FB.getLoginStatus().
   function statusChangeCallback(response) {
     console.log('statusChangeCallback');
@@ -17,7 +21,7 @@
     if (response.status === 'connected') {
       // Logged into your app and Facebook.
       testAPI();
-      getFriends();
+      getFriends(getFriendLoc);
     } else if (response.status === 'not_authorized') {
       // The person is logged into Facebook, but not your app.
       document.getElementById('status').innerHTML = 'Please log ' +
@@ -85,19 +89,60 @@
     });
   }
 
-  function getFriends() {
+  function getFriends(callback) {
     console.log("here are your friends");
     FB.api(
     "/me/friends",
     function (response) {
       if (response && !response.error) {
-        console.log('Successful info: ' + response);
-        document.getElementById('info').innerHTML =
-            'Info: ' + response.data[0];
+        console.log('Successful info: ' + response.data[0]);
+        // document.getElementById('info').innerHTML =
+        //     'Info: ' + response.data[0].name;
             // " Number of events: " + response.data.length + " People attending: " + response.data[0].id; 
+            for (var i = 0; i < response.data.length; i++)
+            {
+                friendIDs[i] = response.data[i].id;
+                getPicture(response.data[i].id, i);
+            }
+      }
+      callback();
+    });
+  }
+
+function getPicture(fid, i)
+{
+  FB.api(
+    "/" + fid + "/picture",
+    function (response) {
+      if (response && !response.error) {
+        console.log(response.data.url);
+        pictures[i] = response;
       }
     }
-  );}
+);
+}
+
+function getFriendLoc()
+{
+  for (var i = 0; i < friendIDs.length; i++)
+  {
+      var fid = friendIDs[i];
+      process(fid);
+      console.log("i: "+ i); 
+  }
+}
+
+function process(fid) {
+  FB.api(
+    "/" + fid,
+    function (response) {
+      if (response && !response.error) {
+        console.log(response);
+        document.getElementById('info').innerHTML += response.name + ": " +response.location.name + "\n ";
+      }
+    });
+}
+
 </script>
 
 <!--
@@ -106,13 +151,15 @@
   the FB.login() function when clicked.
 -->
 
-<fb:login-button scope="public_profile, email, user_friends" onlogin="checkLoginState();">
+<fb:login-button scope="public_profile, email, user_friends, user_location" onlogin="checkLoginState();">
 </fb:login-button>
 
 <div id="status">
 </div>
 
 <div id = "info">
+</div>
+
 </div>
 
 </body>
