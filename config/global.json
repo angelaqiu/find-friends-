@@ -1,0 +1,11 @@
+{
+    "applications": {
+        "_default": {
+            "link": "find(friends)"
+        }, 
+        "find(friends)": {
+            "applicationId": "hLa0sbLpmizYrxpH94wWCxNxkhR88uJZsgvgIJGB", 
+            "masterKey": "6VvBZJyZvdjz2NncAl7adTiR3w6HRe6qHdF56Xi9"
+        }
+    }
+}
