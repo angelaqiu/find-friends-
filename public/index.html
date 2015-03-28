@@ -7,6 +7,12 @@
 <body>
 
 <div id="main">
+  <style type="text/css">
+  html, body, #map-canvas {width:100%; height: 100%; margin: 0; padding: 0;}
+</style>
+<script type="text/javascript"
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYMPupJpOAXoGUZeJmZq1hhHTS3gyxDQw">
+</script>
 <script>
 var friendIDs = [];
 var pictures = [];
@@ -74,7 +80,7 @@ var pictures = [];
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;
     js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/sdk.js";
+    js.src = "http://connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
   }(document, 'script', 'facebook-jssdk'));
 
@@ -131,7 +137,19 @@ function getFriendLoc()
       console.log("i: "+ i); 
   }
 }
-
+var geocoder;
+// var map;
+function initialize() {
+  geocoder = new google.maps.Geocoder();
+  console.log("initialize!");
+  var mapOptions = {
+    center: { lat: 25, lng: -75},
+    zoom: 3
+  };
+  var map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+  console.log("hi map");
+}
 function process(fid, i) {
   FB.api(
     "/" + fid,
@@ -139,6 +157,8 @@ function process(fid, i) {
       if (response && !response.error) {
         console.log(response);
         document.getElementById('info').innerHTML += response.name + ": " +response.location.name + "<img src=\"" + pictures[i] + "\">" + "\n ";
+        console.log("hi process");
+        codeAddress(map,response.name,response.location.name,pictures[i]);
       }
     });
 }
@@ -161,48 +181,39 @@ function process(fid, i) {
 </div>
 
 </div>
-    <style type="text/css">
-      html, body, #map-canvas {width:100%; height: 100%; margin: 0; padding: 0;}
-    </style>
-<div id="status">
-</div>
-    <script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYMPupJpOAXoGUZeJmZq1hhHTS3gyxDQw">
-    </script>
+
     <script type="text/javascript">
-      // var geocoder;
-      // var map;
-      function initialize() {
-        // geocoder = new google.maps.Geocoder();
-        var mapOptions = {
-          center: { lat: 25, lng: -75},
-          zoom: 3
-        };
-        var map = new google.maps.Map(document.getElementById('map-canvas'),
-            mapOptions);
+
+      function codeAddress(map,name,address,icon) {
+        geocoder.geocode( {'address': address},function(results,status) {
+          if (status==google.maps.GeocoderStatus.OK) {
+            // setMarker(map,name,results[0],icon);
+            var image = icon;
+            var latLng = address;
+            var marker = new google.maps.Marker({
+              position: latLng,
+              map: map,
+              // icon: image,
+              // title: name
+              });
+            console.log("marker set!!");
+          } else {
+            alert("geocode was unsuccessful!!!!!!"+status);
+          }
+        });
       }
-      // function codeAddress() {
-      //   var address = document.getElementById("address").value;
-      //   geocoder.geocode( {'address': address},function(results,status) {
-      //     if (status==google.maps.GeocoderStatus.OK) {
-      //       map.setCenter(results[0].geometry.location);
-      //       setMarker(map,results[0])
-      //       })
-      //     }
-      //   })
-      // }
-      // function setMarker(map,location) {
-      //   var image = {}; //TODO
-      //   var latLng = location; //TODO
+      // function setMarker(map,name,location,icon) {
+      //   var image = icon;
+      //   var latLng = location;
       //   var marker = new google.maps.Marker({
       //     position: latLng,
       //     map: map,
-      //     icon: image,
-      //     title: //TODO
-      //     })
+      //     // icon: image,
+      //     // title: name
+      //     });
       //   }
 
-      // }
+      
       google.maps.event.addDomListener(window, 'load', initialize);
 
     </script>
