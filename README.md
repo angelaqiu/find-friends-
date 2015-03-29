@@ -9,5 +9,9 @@ Our target users are those that are traveling, or looking for somewhere to go.
 
 http://findfriends.parseapp.com
 
+
+see a demo here: 
+https://www.youtube.com/watch?v=xsEQMZWq0bg
+
 madeline wu + angela qiu
 steelhacks s15
